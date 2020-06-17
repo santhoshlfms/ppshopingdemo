@@ -34,6 +34,7 @@
             <div class="card-body">
               <p class="strong">Billing Address</p>
               <p><span class="name"> </span></p>
+              <p>Email :<span class="email"> </span></p>
               <p>Address Line 1 : <span class="address_line_1"> </span></p>
               <p>City : <span class="admin_area_1">  </span></p>
               <p>State : <span class="admin_area_2">  </span></p>
@@ -48,6 +49,7 @@
             <div class="card-body">
               <p class="strong">Shipping Address</p>
               <p><span class="name"> </span></p>
+              <p>Email : <span class="email"> </span></p>
               <p>Address Line 1 : <span class="address_line_1"> </span></p>
               <p>City : <span class="admin_area_1">  </span></p>
                <p>State : <span class="admin_area_2">  </span></p>
@@ -128,9 +130,11 @@
         })
         .then(function(details) {
           $.LoadingOverlay("hide");
-          var address = details.purchase_units[0].shipping.address
+          var address = details.purchase_units[0].shipping.address;
           var name = details.purchase_units[0].shipping.name.full_name;
+          var email = details.payer.email_address;
           $('.name').text(name)
+          $('.email').text(email)
           $('.address_line_1').text(address.address_line_1)
           $('.admin_area_1').text(address.admin_area_1)
           $('.admin_area_2').text(address.admin_area_2)
@@ -164,12 +168,12 @@
                 console.log(details)
                 $.LoadingOverlay("hide");
                 alert("Payment Successful")
-                window.location="/shopping-cart.html";
+                window.location="/";
           }).catch(function(err){
             console.log(err)
             $.LoadingOverlay("hide");
             alert("Some Error Occured.")
-            window.location="/shopping-cart.html";
+            window.location="/";
           });
         
       })
