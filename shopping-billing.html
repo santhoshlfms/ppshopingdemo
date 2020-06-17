@@ -33,9 +33,10 @@
           <div class="card">
             <div class="card-body">
               <p class="strong">Billing Address</p>
+              <p><span class="name"> </span></p>
               <p>Address Line 1 : <span class="address_line_1"> </span></p>
               <p>City : <span class="admin_area_1">  </span></p>
-               <p>State : <span class="admin_area_2">  </span></p>
+              <p>State : <span class="admin_area_2">  </span></p>
               <p>country : <span class="country_code"></span></p>
               <p>Postal Code : <span class="postal_code">  </span></p>
           </div>
@@ -46,6 +47,7 @@
           <div class="card">
             <div class="card-body">
               <p class="strong">Shipping Address</p>
+              <p><span class="name"> </span></p>
               <p>Address Line 1 : <span class="address_line_1"> </span></p>
               <p>City : <span class="admin_area_1">  </span></p>
                <p>State : <span class="admin_area_2">  </span></p>
@@ -127,6 +129,8 @@
         .then(function(details) {
           $.LoadingOverlay("hide");
           var address = details.purchase_units[0].shipping.address
+          var name = details.purchase_units[0].shipping.name.full_name;
+          $('.name').text(name)
           $('.address_line_1').text(address.address_line_1)
           $('.admin_area_1').text(address.admin_area_1)
           $('.admin_area_2').text(address.admin_area_2)
