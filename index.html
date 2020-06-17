@@ -11,7 +11,7 @@
     <!-- Bootstrap core CSS -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
     <script src="https://www.paypal.com/sdk/js?client-id=AT5vIvI-b7hTlfwQQdjf__hhMG489_kxEilxC_AXH2jKH6_E7GjaTPb8ht-CTM5YmW9Zy92HiD4igtXG&commit=false"></script>
-
+    <link  rel="stylesheet" href="/css/toast.css" />
   </head>
 
   <body>
@@ -42,7 +42,7 @@
             </ul>
             <div id="id1"></div>
 
-            <button type="button" class="btn btn-lg btn-block btn-outline-primary">Add to cart</button>
+            <button type="button" class="btn btn-lg btn-block btn-outline-primary addcart">Add to cart</button>
 
           </div>
         </div>
@@ -58,7 +58,7 @@
              
             </ul>
             <div id="id2"></div>
-            <button type="button" class="btn btn-lg btn-block btn-outline-primary">Add to cart</button>
+            <button type="button" class="btn btn-lg btn-block btn-outline-primary addcart">Add to cart</button>
           </div>
         </div>
         <div class="card mb-4 box-shadow">
@@ -73,7 +73,7 @@
            
             </ul>
             <div id="id3"></div>
-            <button type="button" class="btn btn-lg btn-block btn-outline-primary">Add to cart</button>
+            <button type="button" class="btn btn-lg btn-block btn-outline-primary addcart">Add to cart</button>
           </div>
         </div>
       </div>
@@ -117,8 +117,8 @@
       </footer>
     </div>
 
-
-    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+    <script src="/js/toast.js"></script>
     <script>
 
       let items = [{id:'#id1', amount:'2057.18'}, {id:'#id2', amount:'1928.61'}, {id:'#id3', amount:'2057.18'}]
@@ -136,56 +136,68 @@
       createOrder: function(data, actions) {
         console.log("Creating Order");
         return fetch("https://pcp-ucc-sample.herokuapp.com/create-order", {
-          method: "POST",
-          headers: {
-            Accept: "application/json",
-            "Content-Type": "application/json"
-          },
-          body: JSON.stringify({
-             amount: item.amount
+            method: "POST",
+            headers: {
+              Accept: "application/json",
+              "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+              amount: item.amount
+            })
           })
-        })
-        .then(res => res.json())
-        .then(res => {
-          if(!res.id)
-            console.log(JSON.stringify(res, null, 4));
-          else
-            console.log("Order Id : "+ res.id)
-          return res;
-        })
-        .then(d => d.id);
-      },
-      onApprove: function(data, actions) {
-        // Get the transaction details
-        if(data.orderID) {
-          window.location="/shopping-billing.html?id="+data.orderID
+          .then(res => res.json())
+          .then(res => {
+            if(!res.id)
+              console.log(JSON.stringify(res, null, 4));
+            else
+              console.log("Order Id : "+ res.id)
+            return res;
+          })
+          .then(d => d.id);
+        },
+        onApprove: function(data, actions) {
+          // Get the transaction details
+          if(data.orderID) {
+            window.location="/shopping-billing.html?id="+data.orderID
+          }
+      
+        },
+        onCancel : function(err) {
+          console.log("You cancelled the operation","error");
+          return  alert("You cancelled the operation");
+        },
+        onError: function(err) {
+          console.log("Some error occurred " + err);
+          console.log("ERROR - "+err.message,"error");
+          alert(
+            "Some Error Occurred . Please open console to see the error " +
+              JSON.stringify(err)
+          );
+        },
+        onInit: function(data, actions) {
+          console.log("PayPal Button Loaded");  
         }
-     
-      },
-      onCancel : function(err) {
-        console.log("You cancelled the operation","error");
-        return  alert("You cancelled the operation");
-      },
-      onError: function(err) {
-        console.log("Some error occurred " + err);
-        console.log("ERROR - "+err.message,"error");
-        alert(
-          "Some Error Occurred . Please open console to see the error " +
-            JSON.stringify(err)
-        );
-      },
-      onInit: function(data, actions) {
-        console.log("PayPal Button Loaded");  
-      }
-    })
-    .render(item.id)
-    
-    .catch(err => {
-      console.log("errrrrror ", err);
-      console.log("ERROR - " + err.message, "error");
-    })
+      })
+      .render(item.id)
+      
+      .catch(err => {
+        console.log("errrrrror ", err);
+        console.log("ERROR - " + err.message, "error");
+      })
 
-  })     
+    })     
+
+      $(document).ready(function(){
+        $(".addcart").on('click', function(e){
+          $.toast({
+            heading: 'Added to cart',
+            icon: 'success',
+            position: 'top-right',
+            stack: false
+        })
+
+        })
+      })
 
     </script>
   </body>
